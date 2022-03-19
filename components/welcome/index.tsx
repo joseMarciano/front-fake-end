@@ -1,4 +1,5 @@
-import { Flex, Box, Heading, Text, Stack, Button, HStack, Image } from "@chakra-ui/react"
+import { Flex, Box, Heading, Stack, Button, HStack, Image } from "@chakra-ui/react"
+import Link from "../link"
 import { MdLogin } from 'react-icons/md'
 import { FiUserPlus } from 'react-icons/fi'
 
@@ -6,7 +7,6 @@ import { FiUserPlus } from 'react-icons/fi'
 
 export default function Welcome() {
     return (
-
         <Flex
             p="2rem"
             direction={["column", "row"]}
@@ -18,8 +18,13 @@ export default function Welcome() {
             <Stack align="center" spacing="2rem">
                 <Heading as="h1" fontWeight="normal"> 👋 Welcome!</Heading>
                 <HStack justifyContent="center" spacing="1rem">
-                    <Button leftIcon={<MdLogin />} colorScheme="green">Login</Button>
-                    <Button leftIcon={<FiUserPlus />} colorScheme="blue">Signup</Button>
+                    <Link to="/login">
+                        <Button leftIcon={<MdLogin />} colorScheme="green">Login</Button>
+                    </Link>
+                    <Link to="/signup">
+                        <Button leftIcon={<FiUserPlus />} colorScheme="blue">Signup</Button>
+                    </Link>
+
                 </HStack>
             </Stack>
             <Box maxWidth="1000px" minWidth="300px">
