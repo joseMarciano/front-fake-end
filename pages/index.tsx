@@ -1,13 +1,8 @@
 import type { NextPage } from 'next'
-import Link from 'next/link'
-
+import Welcome from '../components/welcome'
 
 const Home: NextPage = () => {
-  return (
-  <>
-  <h1>Hello </h1>
-  </>
-  )
+  return (<Welcome/>)
 }
 
 export default Home
