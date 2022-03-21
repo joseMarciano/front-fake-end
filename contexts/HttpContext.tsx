@@ -23,7 +23,7 @@ export function HttpContextProvider({ children }: HttpContextProviderProps) {
 
     useEffect(() => {
         addInterceptors()
-    })
+    }, [])
 
     function addInterceptors() {
         http.interceptors.response.use((response) => response, (error) => {
