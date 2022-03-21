@@ -4,8 +4,16 @@ import { extendTheme } from "@chakra-ui/react"
 
 
 export default extendTheme({
-    fonts: {
-        body: 'Open Sans, sans-serif',
-        heading: 'Open Sans, sans-serif'
+  styles: {
+    global: {
+      body: {
+        bg: 'blackAlpha.800',
+        color: 'white'
       }
+    }
+  },
+  fonts: {
+    body: 'Open Sans, sans-serif',
+    heading: 'Open Sans, sans-serif'
+  }
 })
