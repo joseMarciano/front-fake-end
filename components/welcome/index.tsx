@@ -28,7 +28,7 @@ export default function Welcome() {
                 </HStack>
             </Stack>
             <Box maxWidth="1000px" minWidth="300px">
-                <Image alt="Logo" src="logo/png/white-logo-no-background.png" />
+                <Image alt="Logo" src="logo/png/logo_white.png" />
             </Box>
         </Flex>
     )
