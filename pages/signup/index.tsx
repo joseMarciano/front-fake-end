@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input, Button, Flex, Box, VStack, Image } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, Button, Flex, Box, VStack, Image, useToast } from "@chakra-ui/react"
 import FormInput from "../../components/formInput"
 import { useForm } from "react-hook-form"
 import * as yup from "yup"
@@ -18,8 +18,21 @@ export default function SignUp() {
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema)
     })
+    const toast = useToast()
 
-    const onSubmit = (data: any) => console.log(data)
+    const onSubmit = (data: any) => {
+        const isValid = validateFields(data)
+        if (!isValid) {
+            return toast({
+                description: "Password must match with password confirmation",
+                status: 'error'
+            })
+        }
+    }
+
+    const validateFields = (data: any): boolean => {
+        return data.password === data.passwordConfirmation
+    }
     return (
         <VStack height="100vh" justifyContent="center">
             <Image
