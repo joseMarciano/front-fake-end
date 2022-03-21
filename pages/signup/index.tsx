@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input, Button, Flex, Box, VStack, Image, useToast } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, Button, Flex, Box, VStack, Image, useToast, HStack } from "@chakra-ui/react"
 import FormInput from "../../components/formInput"
 import { useForm } from "react-hook-form"
 import * as yup from "yup"
@@ -7,6 +7,8 @@ import { AiOutlineLock } from 'react-icons/ai'
 import { ReactNode, useState } from "react"
 import { useHttpContext } from "../../contexts/HttpContext"
 import { useRouter } from "next/router"
+import { FiUserPlus } from "react-icons/fi"
+import Link from "../../components/link"
 
 
 const FIELDS = [
@@ -106,9 +108,12 @@ export default function SignUp() {
             >
                 <VStack spacing={5} justifyContent="center">
                     {FIELDS.map(renderField)}
-                    <Box >
-                        <Button isLoading={isLoading} leftIcon={<AiOutlineLock />} colorScheme="blue" color="white" type="submit">Register</Button>
-                    </Box>
+                    <HStack justifyContent="center" spacing="1rem">
+                        <Button type="submit" isLoading={isLoading} leftIcon={<FiUserPlus />} colorScheme="blue">Signup</Button>
+                        <Link to="/login">
+                            <Button leftIcon={<AiOutlineLock />} colorScheme="green" color="white" type="submit">Login</Button>
+                        </Link>
+                    </HStack>
                 </VStack>
             </FormControl>
         </VStack>
