@@ -3,12 +3,13 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { HttpContextProvider } from '../contexts/HttpContext'
 import customTheme from '../configs/theme'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: any) {
 
+  const getLayout = Component.getLayout || ((page: any) => page)
   return (
     <ChakraProvider theme={customTheme}>
       <HttpContextProvider>
-        <Component {...pageProps} />
+        {getLayout(<Component {...pageProps} />)}
       </HttpContextProvider>
     </ChakraProvider>
   )
