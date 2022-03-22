@@ -33,7 +33,7 @@ const schema = yup.object().shape({
 
 export default function SignUp() {
     const { http } = useHttpContext()
-    // const router = useRouter()
+    const router = useRouter()
 
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema)
@@ -44,7 +44,7 @@ export default function SignUp() {
     const onSubmit = (data: any) => {
         setIsLoading(true)
         http.post('/login', data)
-            // .then(() => router.push('/home'))
+            .then(() => router.push('/home'))
             .catch((error) => console.warn(error))
             .finally(() => setIsLoading(false))
     }
