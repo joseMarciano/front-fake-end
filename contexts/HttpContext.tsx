@@ -2,6 +2,7 @@ import { useToast } from "@chakra-ui/react"
 import { AxiosError, AxiosInstance, AxiosResponse } from "axios"
 import { createContext, ReactNode, useContext, useEffect } from "react"
 import { http } from '../configs/axios'
+import { useHttpError } from "../hooks/useHttpError"
 import { useStorage } from "../hooks/useStorage"
 
 
@@ -20,8 +21,8 @@ export function HttpContextProvider({ children }: HttpContextProviderProps) {
     const value = {
         http
     }
-    const toast = useToast()
-    const {setAccessToken, setRefreshToken} = useStorage()
+    const { setAccessToken, setRefreshToken } = useStorage()
+    const httpError = useHttpError()
 
     useEffect(() => {
         addInterceptors()
@@ -32,7 +33,7 @@ export function HttpContextProvider({ children }: HttpContextProviderProps) {
 
 
         function successInterceptor(response: AxiosResponse): AxiosResponse {
-            if(response.config?.url === '/login' || response.config?.url === '/access-token'){
+            if (response.config?.url === '/login' || response.config?.url === '/access-token') {
                 const data = response.data
                 setAccessToken(data?.accessToken)
                 setRefreshToken(data?.refreshToken)
@@ -41,14 +42,7 @@ export function HttpContextProvider({ children }: HttpContextProviderProps) {
         }
 
         function errorInterceptor(error: AxiosError): Promise<AxiosError> {
-            if (error.response?.status === 400) {
-                toast({
-                    description: error.response.data?.message || 'Some error occurred',
-                    status: 'error'
-                })
-            }
-
-            return Promise.reject(error)
+            return httpError.resolve(error)
 
         }
     }
@@ -63,5 +57,3 @@ export function HttpContextProvider({ children }: HttpContextProviderProps) {
 export function useHttpContext() {
     return useContext(HttpContext)
 }
-
-
