@@ -13,11 +13,9 @@ type UseStorageReturnProps = {
 
 
 export function useStorage(): UseStorageReturnProps {
-
     const setAccessToken = (accessToken: string): void => {
         localStorage.setItem(StorageKeys.ACCESS_TOKEN, accessToken)
     }
-
 
     const setRefreshToken = (refreshToken: string): void => {
         localStorage.setItem(StorageKeys.REFRESH_TOKEN, refreshToken)
