@@ -18,8 +18,9 @@ import {
     useDisclosure,
     Heading
 } from "@chakra-ui/react"
-import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { http } from '../../configs/axios'
+import { useStorage } from '../../hooks/useStorage'
 
 type MenuProps = {
     variant: {
@@ -33,9 +34,19 @@ type MenuProps = {
 
 export default function Menu({ variant }: MenuProps) {
     const router = useRouter()
-
+    const { clearTokens } = useStorage()
     const typeMenu = variant.navigation
     const currentSize = variant.key
+
+    const logOut = () => {
+        http.post('auth/logout')
+            .then(clearTokens)
+            .then(goToLoginPage)
+
+        function goToLoginPage() {
+            router.push('/login')
+        }
+    }
 
     if (typeMenu === 'sidebar') return <FixedMenu />
 
@@ -109,12 +120,10 @@ export default function Menu({ variant }: MenuProps) {
                         <Text>Home</Text>
                     </HStack>
                 </Link>
-                <Link to="/login">
-                    <HStack>
-                        <MdLogout />
-                        <Text>Logout</Text>
-                    </HStack>
-                </Link>
+                <HStack cursor="pointer" onClick={logOut}>
+                    <MdLogout />
+                    <Text>Logout</Text>
+                </HStack>
             </VStack>
         )
     }
