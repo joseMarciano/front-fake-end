@@ -10,7 +10,7 @@ type FailedRequestQueueType = {
     onFailure: () => void
 }
 
-export class UnauthorizedErrorHandler implements HttpErrorHandler {
+class UnauthorizedErrorHandler implements HttpErrorHandler {
     private getRefreshToken = useStorage().getRefreshToken
     private getAccessToken = useStorage().getAccessToken
     private setAccessToken = useStorage().setAccessToken
@@ -84,8 +84,9 @@ export class UnauthorizedErrorHandler implements HttpErrorHandler {
             .catch(executeFailedRequestsQueue('onFailure'))
             .finally(setIsRefreshing(false))
             .finally(clearFailedRequests)
-
-
     }
+}
 
+export function makeUnauthorizedErrorHandler() {
+    return new UnauthorizedErrorHandler(() => {window.location.href = '/'})
 }

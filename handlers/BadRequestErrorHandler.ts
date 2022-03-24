@@ -1,19 +1,21 @@
-import { UseToastOptions } from "@chakra-ui/react"
 import { AxiosError } from "axios"
+import { toast } from "../contexts/ApplicationContext"
 import { HttpErrorHandler } from "./HttpErrorHandler"
 
 
-export class BadRequestErrorHandler implements HttpErrorHandler {
-
-    constructor(
-        private readonly toast: (options: UseToastOptions) => void
-    ) { }
-
+class BadRequestErrorHandler implements HttpErrorHandler {
     handle(error: AxiosError): Promise<any> {
-        this.toast({
+        toast({
             description: error.response?.data?.message || 'Some error occurred',
             status: 'error'
         })
         return Promise.reject(error)
     }
 }
+
+export function makeBadRequestHandler() {
+   return new BadRequestErrorHandler()  
+}
+
+
+

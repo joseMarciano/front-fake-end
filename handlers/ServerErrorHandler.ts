@@ -1,20 +1,18 @@
-import { UseToastOptions } from "@chakra-ui/react"
 import { AxiosError } from "axios"
+import { toast } from "../contexts/ApplicationContext"
 import { HttpErrorHandler } from "./HttpErrorHandler"
 
 
-export class ServerErrorHandler implements HttpErrorHandler {
-
-    constructor(
-        private readonly toast: (options: UseToastOptions)=> void
-    ){}
-
+class ServerErrorHandler implements HttpErrorHandler {
     handle(error: AxiosError): Promise<any> {
-        this.toast({
+        toast({
             description: error.response?.data?.message || 'Internal server error',
             status: 'error'
         })
         return Promise.reject(error)
     }
+}
 
+export function makeServerErrorHanlder() {
+    return new ServerErrorHandler()
 }
