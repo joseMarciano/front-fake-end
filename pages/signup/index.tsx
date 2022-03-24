@@ -5,10 +5,10 @@ import * as yup from "yup"
 import { yupResolver } from '@hookform/resolvers/yup'
 import { AiOutlineLock } from 'react-icons/ai'
 import { ReactNode, useState } from "react"
-import { useHttpContext } from "../../contexts/HttpContext"
 import { useRouter } from "next/router"
 import { FiUserPlus } from "react-icons/fi"
 import Link from "../../components/link"
+import { http } from "../../configs/axios"
 
 
 const FIELDS = [
@@ -43,7 +43,6 @@ const schema = yup.object().shape({
 
 
 export default function SignUp() {
-    const { http } = useHttpContext()
     const router = useRouter()
 
     const { register, handleSubmit, formState } = useForm({

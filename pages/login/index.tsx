@@ -5,11 +5,11 @@ import * as yup from "yup"
 import { yupResolver } from '@hookform/resolvers/yup'
 import { AiOutlineLock } from 'react-icons/ai'
 import { ReactNode, useState } from "react"
-import { useHttpContext } from "../../contexts/HttpContext"
 import { useRouter } from "next/router"
 import Link from "../../components/link"
 import { MdLogin } from "react-icons/md"
 import { FiUserPlus } from "react-icons/fi"
+import { http } from "../../configs/axios"
 
 
 const FIELDS = [
@@ -32,7 +32,6 @@ const schema = yup.object().shape({
 
 
 export default function SignUp() {
-    const { http } = useHttpContext()
     const router = useRouter()
 
     const { register, handleSubmit, formState } = useForm({
@@ -86,7 +85,7 @@ export default function SignUp() {
                     <HStack justifyContent="center" spacing="1rem">
                     <Button isLoading={isLoading} leftIcon={<AiOutlineLock />} colorScheme="green" color="white" type="submit">Login</Button>
                         <Link to="/signup">
-                            <Button leftIcon={<FiUserPlus />} colorScheme="blue">Signup</Button>
+                            <Button isDisabled={isLoading} leftIcon={<FiUserPlus />} colorScheme="blue">Signup</Button>
                         </Link>
                     </HStack>
                 </VStack>
