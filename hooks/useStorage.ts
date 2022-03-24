@@ -8,7 +8,8 @@ type UseStorageReturnProps = {
     setAccessToken: (accessToken: string) => void,
     setRefreshToken: (refreshToken: string) => void,
     getAccessToken: () => string | null,
-    getRefreshToken: () => string | null
+    getRefreshToken: () => string | null,
+    clearTokens: () => void
 }
 
 
@@ -30,10 +31,16 @@ export function useStorage(): UseStorageReturnProps {
         return localStorage.getItem(StorageKeys.REFRESH_TOKEN)
     }
 
+    const clearTokens = (): void => {
+        localStorage.removeItem(StorageKeys.ACCESS_TOKEN)
+        localStorage.removeItem(StorageKeys.REFRESH_TOKEN)
+    }
+
     return {
         setAccessToken,
         setRefreshToken,
         getAccessToken,
-        getRefreshToken
+        getRefreshToken,
+        clearTokens
     }
 }
