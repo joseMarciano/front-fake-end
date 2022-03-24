@@ -1,6 +1,5 @@
-import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
-import { HttpContextProvider } from '../contexts/HttpContext'
+import { ApplicationContextProvider } from '../contexts/ApplicationContext'
 import customTheme from '../configs/theme'
 
 function MyApp({ Component, pageProps }: any) {
@@ -8,9 +7,9 @@ function MyApp({ Component, pageProps }: any) {
   const getLayout = Component.getLayout || ((page: any) => page)
   return (
     <ChakraProvider theme={customTheme}>
-      <HttpContextProvider>
+      <ApplicationContextProvider>
         {getLayout(<Component {...pageProps} />)}
-      </HttpContextProvider>
+      </ApplicationContextProvider>
     </ChakraProvider>
   )
 }
