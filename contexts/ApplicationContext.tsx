@@ -1,5 +1,7 @@
 import { useToast, UseToastOptions } from "@chakra-ui/react"
+import { useRouter } from "next/router"
 import { createContext, ReactNode, useContext, useEffect, useMemo } from "react"
+import { useStorage } from "../hooks/useStorage"
 
 
 
@@ -14,11 +16,20 @@ export let toast: (options: UseToastOptions) => void
 
 export function ApplicationContextProvider({ children }: ApplicationContextProviderProps) {
     const toastChakra = useToast()
+    const router = useRouter()
+    const { getAccessToken } = useStorage()
     const value = {}
 
     useEffect(() => {
         toast = toastChakra
-    },[])
+        verifyIfUserIsLogged()
+    }, [])
+
+    const verifyIfUserIsLogged = () => {
+        if (getAccessToken() && (router.asPath === '/login' || router.asPath === '/signup')) {
+            router.push('/home')
+        }
+    }
 
     return (
         <ApplicationContext.Provider value={value}>
