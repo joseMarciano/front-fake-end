@@ -1,27 +1,29 @@
 import { useToast } from "@chakra-ui/react"
-import { AxiosError, AxiosInstance } from "axios"
+import { AxiosError } from "axios"
+import { useRouter } from "next/router"
+import { useMemo } from "react"
 import { BadRequestErrorHandler } from "../handlers/BadRequestErrorHandler"
 import { HttpErrorHandler } from "../handlers/HttpErrorHandler"
 import { ServerErrorHandler } from "../handlers/ServerErrorHandler"
 import { UnauthorizedErrorHandler } from "../handlers/UnauthorizedErrorHandler"
 
-type HttpErrorProps = {
-    http: AxiosInstance
-}
-
 export function useHttpError() {
     const toast = useToast()
+    const router = useRouter()
 
-    const mapErrors = new Map<number, HttpErrorHandler>([
-        [400, new BadRequestErrorHandler(toast)],
-        [401, new UnauthorizedErrorHandler()],
-        [500, new ServerErrorHandler(toast)]
-    ])
+    const mapErrors = useMemo<Map<number, HttpErrorHandler>>(() =>
+        new Map<number, HttpErrorHandler>([
+            [400, new BadRequestErrorHandler(toast)],
+            [401, new UnauthorizedErrorHandler(() => {
+                router.push('/login')
+            })],
+            [500, new ServerErrorHandler(toast)]
+        ]), [])
 
 
-    const resolve = (error: AxiosError): Promise<any> => {
+    const resolve = async (error: AxiosError): Promise<any> => {
         const statusCode = error.response?.status || 500
-        return mapErrors.get(statusCode)?.handle(error) || Promise.reject(error)
+        return await mapErrors.get(statusCode)?.handle(error) || await Promise.reject(error)
     }
 
     return {
