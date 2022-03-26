@@ -40,11 +40,12 @@ export default function Menu({ variant }: MenuProps) {
 
     const logOut = () => {
         http.post('auth/logout')
-            .then(clearTokens)
             .then(goToLoginPage)
+            .then(clearTokens)
+            .catch((error) => console.warn(error))
 
-        function goToLoginPage() {
-            router.push('/login')
+        function goToLoginPage(): Promise<boolean> {
+            return router.push('/login')
         }
     }
 
@@ -115,7 +116,7 @@ export default function Menu({ variant }: MenuProps) {
         return (
             <VStack fontSize="1.275rem">
                 <Link to="/home">
-                    <HStack color={router.asPath === "/home" ? "yellow.400" : ""}>
+                    <HStack color={router.asPath === "/home" ? "teal.400" : ""}>
                         <IoHome />
                         <Text>Home</Text>
                     </HStack>
