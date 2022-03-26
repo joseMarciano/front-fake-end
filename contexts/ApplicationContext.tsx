@@ -22,11 +22,15 @@ export function ApplicationContextProvider({ children }: ApplicationContextProvi
 
     useEffect(() => {
         toast = toastChakra
-        verifyIfUserIsLogged()
     }, [])
 
+    useEffect(() => {
+        verifyIfUserIsLogged()
+    },[router.asPath])
+
     const verifyIfUserIsLogged = () => {
-        if (getAccessToken() && (router.asPath === '/login' || router.asPath === '/signup')) {
+
+        if (getAccessToken() && (router.asPath === '/login')) {
             router.push('/home')
         }
     }
