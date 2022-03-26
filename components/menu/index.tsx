@@ -41,8 +41,8 @@ export default function Menu({ variant }: MenuProps) {
     const logOut = () => {
         http.post('auth/logout')
             .then(goToLoginPage)
-            .then(clearTokens)
             .catch((error) => console.warn(error))
+            .finally(clearTokens)
 
         function goToLoginPage(): Promise<boolean> {
             return router.push('/login')
