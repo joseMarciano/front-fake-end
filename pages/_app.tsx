@@ -1,6 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { ApplicationContextProvider } from '../contexts/ApplicationContext'
 import customTheme from '../configs/theme'
+import { ModalContextProvider } from '../contexts/ContextModal'
 
 function MyApp({ Component, pageProps }: any) {
 
@@ -8,7 +9,9 @@ function MyApp({ Component, pageProps }: any) {
   return (
     <ChakraProvider theme={customTheme}>
       <ApplicationContextProvider>
-        {getLayout(<Component {...pageProps} />)}
+        <ModalContextProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </ModalContextProvider>
       </ApplicationContextProvider>
     </ChakraProvider>
   )
