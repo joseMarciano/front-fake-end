@@ -1,9 +1,12 @@
 import { Button, Flex, useBreakpointValue } from "@chakra-ui/react"
-import { ReactNode, useEffect } from "react"
+import { AxiosResponse } from "axios"
+import { ReactNode, useEffect, useState } from "react"
 import { FiRefreshCcw, FiPlus } from 'react-icons/fi'
 import CommonLayoutWrapper from "../../components/commonLayoutWrapper"
+import { ProjectContextProvider, useProjectContext } from "../../components/home/project/context/ProjectContext"
 import ProjectList from '../../components/home/project/list/index'
 import { ProjectModal } from "../../components/home/project/modal"
+import { http } from "../../configs/axios"
 import { useModalContext } from "../../contexts/ContextModal"
 
 
@@ -20,15 +23,23 @@ export default function Home() {
         md: mdVariant,
         lg: lgVariant
     })
-
+    const projectContext = useProjectContext()
     const { actions, setTemplate, setParams, params } = useModalContext()
-
-    useEffect(() => {
+    const setConfigProjectModal = () => {
         setParams({
             ...params,
+            others: {
+                ...params.others,
+                callBackSearch: projectContext.search
+            },
             title: 'Adding a project'
         })
         setTemplate(<ProjectModal />)
+    }
+
+    useEffect(() => {
+        setConfigProjectModal()
+        projectContext.search()
     }, [])
 
 
@@ -36,18 +47,19 @@ export default function Home() {
         <Flex m="0.5rem" p={variants?.padding} flexDirection="column" gap="0.25rem">
             <Flex alignItems="center" justifyContent="space-between">
                 <Button alignSelf="flex-end" onClick={() => actions.open()} colorScheme="teal" leftIcon={<FiPlus />} m="0.5rem">Project</Button>
-                <Button alignSelf="flex-end" colorScheme="teal" leftIcon={<FiRefreshCcw />} m="0.5rem">Refresh</Button>
+                <Button onClick={projectContext.search} disabled={projectContext.isLoading} isLoading={projectContext.isLoading} alignSelf="flex-end" colorScheme="teal" leftIcon={<FiRefreshCcw />} m="0.5rem">Refresh</Button>
             </Flex>
             <ProjectList />
         </Flex>
-
     )
 }
 
 Home.getLayout = function getLayout(page: ReactNode) {
     return (
         <CommonLayoutWrapper>
-            {page}
+            <ProjectContextProvider>
+                {page}
+            </ProjectContextProvider>
         </CommonLayoutWrapper>
     )
 }
