@@ -24,6 +24,7 @@ export function ProjectModal() {
         setTimeout(() => {
             http.post('/auth/project', data)
                 .catch((error) => console.warn(error))
+                .then(() => others.callBackSearch())
                 .then(() => actions.close())
                 .finally(() => setIsLoading(false))
         }, 6000)
