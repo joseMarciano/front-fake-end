@@ -14,17 +14,18 @@ class UnauthorizedErrorHandler implements HttpErrorHandler {
     private getRefreshToken = useStorage().getRefreshToken
     private getAccessToken = useStorage().getAccessToken
     private setAccessToken = useStorage().setAccessToken
+    private clearTokens = useStorage().clearTokens
     private failedRequestsQueue: FailedRequestQueueType[] = []
     private isRefresingToken = false
 
 
     constructor(
-        private readonly logOutClient: () => void
+        private readonly logOutClient: () => Promise<void>
     ) { }
 
     handle(error: AxiosError): Promise<any> {
-        if(error.config.url !== '/access-token') return this.handleTokenExpired(error)
-        this.logOutClient()
+        if (error.config.url !== '/access-token') return this.handleTokenExpired(error)
+        this.logOutClient().then(this.clearTokens)
         return Promise.reject(error)
     }
 
@@ -88,5 +89,5 @@ class UnauthorizedErrorHandler implements HttpErrorHandler {
 }
 
 export function makeUnauthorizedErrorHandler() {
-    return new UnauthorizedErrorHandler(() => {window.location.href = '/'})
+    return new UnauthorizedErrorHandler(async () => { await Promise.resolve(window.location.href = '/') })
 }
