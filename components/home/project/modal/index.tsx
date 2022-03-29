@@ -21,14 +21,13 @@ export function ProjectModal() {
 
     const onSubmit = (data: any) => {
         setIsLoading(true)
-        setTimeout(() => {
-            http.post('/auth/project', data)
-                .catch((error) => console.warn(error))
-                .then(() => others.callBackSearch())
-                .then(() => actions.close())
-                .finally(() => setIsLoading(false))
-        }, 6000)
+        http.post('/auth/project', data)
+            .catch((error) => console.warn(error))
+            .then(() => others.callBackSearch())
+            .then(() => actions.close())
+            .finally(() => setIsLoading(false))
     }
+
     return (
         <>
             <ModalBody >
