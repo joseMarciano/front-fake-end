@@ -1,5 +1,6 @@
-import { createContext, ReactNode, useContext, useState } from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import { http } from "../../../../configs/axios"
+import { Page, useInfiniteScroll } from "../../../../hooks/useInfiniteScroll"
 
 export type Project = {
     id: string,
@@ -15,7 +16,7 @@ type ProjectContextProviderProps = {
 
 type ProjectContextProps = {
     isLoading: boolean
-    search: () => Promise<void>
+    search: () => Promise<Page>
     projects: Project[]
 }
 
@@ -23,15 +24,28 @@ const ProjectContext = createContext({} as ProjectContextProps)
 
 export function ProjectContextProvider({ children }: ProjectContextProviderProps) {
     const [isLoading, setIsLoading] = useState(false)
-    const [projects, setProjects] = useState([] as Project[])
+    let [projects, setProjects] = useState([] as Project[])
 
-
-    const search = () => {
+    const searchInfiniteScroll = async (params: Omit<Page, 'total' | 'content' | 'hasNext'>): Promise<Page> => {
         setIsLoading(true)
-        return http.get('/auth/project')
-            .then((response) => setProjects([...response.data.content]))
+        return await http.get('/auth/project', {
+            params
+        })
+            .then((response) => {
+                setProjects(projects.concat(response.data?.content || []))
+                return response.data
+            })
             .catch((error) => console.warn(error))
             .finally(() => setIsLoading(false))
+    }
+
+    useInfiniteScroll(searchInfiniteScroll)
+
+    const search = async (): Promise<Page> => {
+        projects = []
+        return await searchInfiniteScroll({
+            limit: 20, offset: 0
+        })
     }
 
     return (
