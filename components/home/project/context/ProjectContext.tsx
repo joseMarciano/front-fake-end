@@ -17,6 +17,7 @@ type ProjectContextProviderProps = {
 type ProjectContextProps = {
     isLoading: boolean
     search: () => Promise<Page>
+    deleteById: (id: string) => Promise<void>
     projects: Project[]
 }
 
@@ -48,10 +49,22 @@ export function ProjectContextProvider({ children }: ProjectContextProviderProps
         })
     }
 
+    const deleteById = async (id: string): Promise<void> => {
+        const findProjectByIdAndRemove = (): Project[] => {
+            return projects.filter((project) => project.id !== id)
+        }
+
+        return await http.delete(`/auth/project/${id}`)
+            .then(() => setProjects([...findProjectByIdAndRemove()]))
+            .catch((error) => console.warn(error))
+
+    }
+
     return (
         <ProjectContext.Provider value={{
             isLoading,
             search,
+            deleteById,
             projects
         }}>
             {children}
