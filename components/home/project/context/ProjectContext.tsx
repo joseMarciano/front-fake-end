@@ -18,6 +18,7 @@ type ProjectContextProps = {
     isLoading: boolean
     search: () => Promise<Page>
     deleteById: (id: string) => Promise<void>
+    save: (data: Pick<Project, 'title' | 'description'>) => Promise<void>
     projects: Project[]
 }
 
@@ -42,6 +43,12 @@ export function ProjectContextProvider({ children }: ProjectContextProviderProps
 
     useInfiniteScroll(searchInfiniteScroll)
 
+    const save = async (data: Pick<Project, 'title' | 'description'>): Promise<void> => {
+        return await http.post('/auth/project', data)
+            .catch((error) => console.warn(error))
+            .then(() => { search() })
+    }
+
     const search = async (): Promise<Page> => {
         projects = []
         return await searchInfiniteScroll({
@@ -65,6 +72,7 @@ export function ProjectContextProvider({ children }: ProjectContextProviderProps
             isLoading,
             search,
             deleteById,
+            save,
             projects
         }}>
             {children}

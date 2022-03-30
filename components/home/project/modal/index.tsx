@@ -6,6 +6,7 @@ import FormInput from "../../../formInput"
 import *  as yup from 'yup'
 import { http } from "../../../../configs/axios"
 import { useState } from "react"
+import { useProjectContext } from "../context/ProjectContext"
 
 const schema = yup.object().shape({
     title: yup.string().required("Title is required"),
@@ -13,7 +14,7 @@ const schema = yup.object().shape({
 })
 
 export function ProjectModal() {
-    const { actions, params: { others } } = useModalContext()
+    const { actions, params: { others: { projectContext } } } = useModalContext()
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(schema)
     })
@@ -21,9 +22,7 @@ export function ProjectModal() {
 
     const onSubmit = (data: any) => {
         setIsLoading(true)
-        http.post('/auth/project', data)
-            .catch((error) => console.warn(error))
-            .then(() => others.callBackSearch())
+        projectContext.save(data)
             .then(() => actions.close())
             .finally(() => setIsLoading(false))
     }

@@ -30,7 +30,7 @@ export default function Home() {
             ...params,
             others: {
                 ...params.others,
-                callBackSearch: projectContext.search
+                projectContext
             },
             title: 'Adding a project'
         })
