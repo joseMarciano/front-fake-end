@@ -8,8 +8,9 @@ import {
     Text,
     VStack
 } from "@chakra-ui/react"
-import { useContext, useState } from "react"
+import { useState } from "react"
 import { FiCopy, FiEdit, FiTrash } from "react-icons/fi"
+import { toast } from "../../../../contexts/ApplicationContext"
 import { useModalContext } from "../../../../contexts/ContextModal"
 import { Project, useProjectContext } from "../context/ProjectContext"
 
@@ -35,7 +36,7 @@ type RowProjectListProps = {
 function RowProjectList({ project }: RowProjectListProps) {
     const [isDeleting, setIsDeleting] = useState(false)
     const { deleteById } = useProjectContext()
-    const  projectContext = useProjectContext()
+    const projectContext = useProjectContext()
     const { actions, setParams } = useModalContext()
 
 
@@ -48,6 +49,33 @@ function RowProjectList({ project }: RowProjectListProps) {
                 projectContext
             }
         })
+    }
+
+    const copyToken = () => {
+        try {
+            navigator
+                .clipboard
+                .writeText(project.secretKey)
+                .then(successMessage)
+                .catch((error) => console.warn(error))
+
+        } catch (error) {
+            failMessage()
+        }
+
+        function successMessage() {
+            toast({
+                description: 'Token was copied. Do not share with anyone!',
+                status: 'warning'
+            })
+        }
+
+        function failMessage() {
+            toast({
+                description: 'Fail on copy token',
+                status: 'error'
+            })
+        }
     }
 
 
@@ -66,7 +94,7 @@ function RowProjectList({ project }: RowProjectListProps) {
                         <Text maxWidth="220px" as="span" >{project.title}</Text>
                         <Text maxWidth="220px" fontSize="0.75rem" as="span" color="gray.400" alignSelf="flex-start" size="sm" flex='1' p="0">{project.description}</Text>
                     </VStack>
-                    <Button bg="inherit" size="sm">
+                    <Button bg="inherit" size="sm" onClick={copyToken}>
                         <Icon color="teal.200" as={FiCopy} />
                     </Button>
                     <Button bg="inherit" size="sm" onClick={openEditModal}>
