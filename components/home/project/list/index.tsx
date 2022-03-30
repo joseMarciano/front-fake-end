@@ -8,8 +8,9 @@ import {
     Text,
     VStack
 } from "@chakra-ui/react"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { FiCopy, FiEdit, FiTrash } from "react-icons/fi"
+import { useModalContext } from "../../../../contexts/ContextModal"
 import { Project, useProjectContext } from "../context/ProjectContext"
 
 
@@ -34,6 +35,20 @@ type RowProjectListProps = {
 function RowProjectList({ project }: RowProjectListProps) {
     const [isDeleting, setIsDeleting] = useState(false)
     const { deleteById } = useProjectContext()
+    const  projectContext = useProjectContext()
+    const { actions, setParams } = useModalContext()
+
+
+    const openEditModal = () => {
+        actions.open()
+        setParams({
+            title: 'Editing Project',
+            others: {
+                project,
+                projectContext
+            }
+        })
+    }
 
 
     const deleteProjectById = (): Promise<void> => {
@@ -54,7 +69,7 @@ function RowProjectList({ project }: RowProjectListProps) {
                     <Button bg="inherit" size="sm">
                         <Icon color="teal.200" as={FiCopy} />
                     </Button>
-                    <Button bg="inherit" size="sm">
+                    <Button bg="inherit" size="sm" onClick={openEditModal}>
                         <Icon color="teal.200" as={FiEdit} />
                     </Button>
                     <Button bg="inherit" size="sm" onClick={deleteProjectById} isLoading={isDeleting}>

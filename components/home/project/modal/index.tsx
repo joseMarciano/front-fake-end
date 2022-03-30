@@ -4,9 +4,7 @@ import { useForm } from "react-hook-form"
 import { useModalContext } from "../../../../contexts/ContextModal"
 import FormInput from "../../../formInput"
 import *  as yup from 'yup'
-import { http } from "../../../../configs/axios"
-import { useState } from "react"
-import { useProjectContext } from "../context/ProjectContext"
+import { useEffect, useState } from "react"
 
 const schema = yup.object().shape({
     title: yup.string().required("Title is required"),
@@ -14,15 +12,30 @@ const schema = yup.object().shape({
 })
 
 export function ProjectModal() {
-    const { actions, params: { others: { projectContext } } } = useModalContext()
-    const { register, handleSubmit, formState } = useForm({
-        resolver: yupResolver(schema)
+    const { actions, params: { others: { projectContext, project } } } = useModalContext()
+    const { register, handleSubmit, formState, reset } = useForm({
+        resolver: yupResolver(schema),
+        defaultValues: project
     })
     const [isLoading, setIsLoading] = useState(false)
+    const [modeModal, setModeModal] = useState<'save' | 'edit'>('save')
+
+
+    useEffect(() => {
+        if (project?.id) {
+            setModeModal('edit')
+        } else{
+            reset()
+        }
+    }, [])
+
+    useEffect(() => {
+        return () => console.log()
+    }, [])
 
     const onSubmit = (data: any) => {
         setIsLoading(true)
-        projectContext.save(data)
+        projectContext[modeModal](data)
             .then(() => actions.close())
             .finally(() => setIsLoading(false))
     }

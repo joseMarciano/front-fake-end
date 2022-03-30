@@ -27,14 +27,17 @@ export default function Home() {
     const { actions, setTemplate, setParams, params } = useModalContext()
     const setConfigProjectModal = () => {
         setParams({
-            ...params,
             others: {
-                ...params.others,
                 projectContext
             },
             title: 'Adding a project'
         })
         setTemplate(<ProjectModal />)
+    }
+
+    const openModal = () => {
+        setConfigProjectModal()
+        actions.open()
     }
 
     useEffect(() => {
@@ -46,7 +49,7 @@ export default function Home() {
     return (
         <Flex m="0.5rem" p={variants?.padding} flexDirection="column" gap="0.25rem">
             <Flex alignItems="center" justifyContent="space-between">
-                <Button alignSelf="flex-end" onClick={() => actions.open()} colorScheme="teal" leftIcon={<FiPlus />} m="0.5rem">Project</Button>
+                <Button alignSelf="flex-end" onClick={openModal} colorScheme="teal" leftIcon={<FiPlus />} m="0.5rem">Project</Button>
                 <Button onClick={projectContext.search} disabled={projectContext.isLoading} isLoading={projectContext.isLoading} alignSelf="flex-end" colorScheme="teal" leftIcon={<FiRefreshCcw />} m="0.5rem">Refresh</Button>
             </Flex>
             <ProjectList />

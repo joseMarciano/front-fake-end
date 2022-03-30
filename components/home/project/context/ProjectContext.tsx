@@ -19,6 +19,7 @@ type ProjectContextProps = {
     search: () => Promise<Page>
     deleteById: (id: string) => Promise<void>
     save: (data: Pick<Project, 'title' | 'description'>) => Promise<void>
+    edit: (data: Project) => Promise<void>
     projects: Project[]
 }
 
@@ -49,6 +50,12 @@ export function ProjectContextProvider({ children }: ProjectContextProviderProps
             .then(() => { search() })
     }
 
+    const edit = async (data: Project): Promise<void> => {
+        return await http.put(`/auth/project/${data.id}`, data)
+            .catch((error) => console.warn(error))
+            .then(() => { search() })
+    }
+
     const search = async (): Promise<Page> => {
         projects = []
         return await searchInfiniteScroll({
@@ -73,6 +80,7 @@ export function ProjectContextProvider({ children }: ProjectContextProviderProps
             search,
             deleteById,
             save,
+            edit,
             projects
         }}>
             {children}

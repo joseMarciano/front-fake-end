@@ -26,7 +26,8 @@ export function useInfiniteScroll(search: (params: Omit<Page, 'total' | 'content
             setIsSearching(true)
             search({ offset, limit })
                 .then((response) => {
-                    setKeepSearching(response.content.length <= response.total)
+                    let content = response.content || [] 
+                    setKeepSearching(content.length > 0)
                     setOffset((response?.offset || 0) + (response?.limit || DEFAULT_PAGE_VALUE))
                     setLimit(response?.limit || DEFAULT_PAGE_VALUE)
                 }).finally(() => setIsSearching(false))
