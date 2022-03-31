@@ -14,8 +14,8 @@ type ModalContextProps = {
 }
 
 type ModalParamsProps = {
-    title: string,
-    others: any
+    title?: string,
+    others?: any
 }
 
 const ModalContext = createContext({} as ModalContextProps)
@@ -27,7 +27,7 @@ type ModalContextProvider = {
 
 export function ModalContextProvider({ children }: ModalContextProvider) {
     const [template, setTemplate] = useState(<div /> as ReactNode)
-    const [params, setParams] = useState({
+    const [params, setParamsModal] = useState({
         title: '',
         others: {}
     })
@@ -36,6 +36,9 @@ export function ModalContextProvider({ children }: ModalContextProvider) {
     const close = useCallback(() => setIsOpen(false), [])
     const open = useCallback(() => setIsOpen(true), [])
     const toogle = useCallback(() => setIsOpen(!isOpen), [isOpen])
+    const setParams = ({ title = '', others = {} }) => {
+        setParamsModal({ title, others })
+    }
 
     const actions = {
         isOpen,

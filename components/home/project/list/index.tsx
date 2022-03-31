@@ -10,9 +10,12 @@ import {
 } from "@chakra-ui/react"
 import { useState } from "react"
 import { FiCopy, FiEdit, FiTrash } from "react-icons/fi"
+import { BiCodeBlock } from "react-icons/bi"
 import { toast } from "../../../../contexts/ApplicationContext"
 import { useModalContext } from "../../../../contexts/ContextModal"
 import { Project, useProjectContext } from "../context/ProjectContext"
+import { ProjectModal } from "../modal"
+import { ResourceModal } from "../../resource/modal"
 
 
 export default function ProjectList() {
@@ -37,11 +40,11 @@ function RowProjectList({ project }: RowProjectListProps) {
     const [isDeleting, setIsDeleting] = useState(false)
     const { deleteById } = useProjectContext()
     const projectContext = useProjectContext()
-    const { actions, setParams } = useModalContext()
+    const { actions, setParams, setTemplate } = useModalContext()
 
 
     const openEditModal = () => {
-        actions.open()
+        setTemplate(<ProjectModal />)
         setParams({
             title: 'Editing Project',
             others: {
@@ -49,6 +52,19 @@ function RowProjectList({ project }: RowProjectListProps) {
                 projectContext
             }
         })
+        actions.open()
+    }
+
+    const openResourceModal = () => {
+        setTemplate(<ResourceModal />)
+        setParams({
+            title: 'Resources',
+            others: {
+                project,
+                projectContext
+            }
+        })
+        actions.open()
     }
 
     const copyToken = () => {
@@ -94,6 +110,9 @@ function RowProjectList({ project }: RowProjectListProps) {
                         <Text maxWidth="220px" as="span" >{project.title}</Text>
                         <Text maxWidth="220px" fontSize="0.75rem" as="span" color="gray.400" alignSelf="flex-start" size="sm" flex='1' p="0">{project.description}</Text>
                     </VStack>
+                    <Button bg="inherit" size="sm" onClick={openResourceModal}>
+                        <Icon color="teal.200" as={BiCodeBlock} />
+                    </Button>
                     <Button bg="inherit" size="sm" onClick={copyToken}>
                         <Icon color="teal.200" as={FiCopy} />
                     </Button>

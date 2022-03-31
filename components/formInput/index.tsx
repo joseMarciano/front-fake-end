@@ -30,6 +30,6 @@ export default function FormInput({
             }
             <Input id={name} {...inputProps} {...useFormRegiterFn(name)} />
             {formState && 
-            <FormErrorMessage mt="2px">{formState.errors[name]?.message}</FormErrorMessage>}
+            <FormErrorMessage position="absolute" mt="2px">{formState.errors[name]?.message}</FormErrorMessage>}
         </>)
 } 

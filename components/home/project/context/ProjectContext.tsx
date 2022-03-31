@@ -10,6 +10,13 @@ export type Project = {
     secretKey: string
 }
 
+export type Resource = {
+    id: string,
+    user: string,
+    name: string,
+    project: string,
+}
+
 type ProjectContextProviderProps = {
     children: ReactNode
 }
@@ -20,6 +27,9 @@ type ProjectContextProps = {
     deleteById: (id: string) => Promise<void>
     save: (data: Pick<Project, 'title' | 'description'>) => Promise<void>
     edit: (data: Project) => Promise<void>
+    saveResource: (resource: any, projectId: string) => Promise<Resource>
+    findResourcesByProjectId: (projectId: string) => Promise<Resource[]>
+    deleteResourceById:  (idResource: string) => Promise<void>
     projects: Project[]
 }
 
@@ -74,6 +84,24 @@ export function ProjectContextProvider({ children }: ProjectContextProviderProps
 
     }
 
+    const saveResource = async (resource: any, projectId: string) => {
+        return await http.post(`/auth/resource/${projectId}`, resource)
+            .then(response => response.data)
+            .catch((error) => console.warn(error))
+    }
+
+    const findResourcesByProjectId = async (projectId: string) => {
+        return await http.get(`/auth/resource/${projectId}`)
+            .then(response => response.data)
+            .catch((error) => console.warn(error))
+    }
+
+    const deleteResourceById = async (idResource: string) => {
+        return await http.delete(`/auth/resource/${idResource}`)
+            .then(response => response?.data)
+            .catch((error) => console.warn(error))
+    }
+
     return (
         <ProjectContext.Provider value={{
             isLoading,
@@ -81,6 +109,9 @@ export function ProjectContextProvider({ children }: ProjectContextProviderProps
             deleteById,
             save,
             edit,
+            saveResource,
+            findResourcesByProjectId,
+            deleteResourceById,
             projects
         }}>
             {children}
